@@ -3,25 +3,12 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" href="../public/font.css" />
-    <link rel="stylesheet" href="../public/styles.css" />
+    <link rel="stylesheet" href="font.css" />
+    <link rel="stylesheet" href="styles.css" />
     <title>PeekaPost</title>
   </head>
   <body>
-    <header>
-      <div class="container flex space-bt align-center">
-        <h1>PeekaPost</h1>
-        <div class="container flex justify-center align-center gap-lg">
-          <a class="nav-link" href="/messages">Messages</a>
-          <a class="nav-link" href="/profile"
-            ><img
-              class="avatar border-full"
-              src="https://placehold.co/40"
-              alt="user avatar"
-          /></a>
-        </div>
-      </div>
-    </header>
+    <%- include("./partials/header") %>
     <main>
       <div class="message-board border-md flex flex-col gap-md">
         <div class="message-board_header flex flex-col justify-center align-center">
@@ -132,21 +119,7 @@
         </div>
       </div>
     </main>
-    <footer>
-      <div class="flex space-ar">
-        <div><h3>PeekaPost</h3></div>
-        <div class="flex align-center gap-md">
-          <a class="rm-text-deco-all" href="/">About</a>
-          <a class="rm-text-deco-all" href="/">Contact</a>
-          <a class="rm-text-deco-all" href="/">Privacy Policy</a>
-          <a class="rm-text-deco-all" href="/">Terms of Service</a>
-        </div>
-      </div>
-      <div class="flex justify-center align-center">
-        <p>© 2024 PeekaPost. All rights reserved.</p>
-      </div>
-      </div>
-    </footer>
+    <%- include("./partials/footer") %>
   </body>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
   <script>

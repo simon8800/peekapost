@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="font.css" />
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="form-styles.css">
+  <title>PeekaPost Sign Up</title>
+</head>
+<body>
+  <%- include("./partials/header") %>
+  <main class="form-main">
+    <div class="form-container">
+      <h2>Sign Up for PeekaPost</h2>
+      <div class="form-wrapper">
+        <form action="/sign-up" method="POST">
+          <div class="form-field">
+            <label for="username">Username</label>
+            <input type="text" min="3" max="30" placeholder="Choose a username" required>
+          </div>
+          <div class="form-field">
+            <label for="password">Password</label>
+            <input type="password" min="8" max="64" placeholder="Create a password" required>
+          </div>
+          <div>
+            <input class="form-btn" type="submit" value="Sign Up">
+          </div>
+        </form>
+      </div>
+      <p>Already have an account? <a class="nav-link" href="/sign-in">Log in</a></p>
+    </div>
+  </main>
+  <%- include("./partials/footer") %>
+</body>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script>
+  lucide.createIcons();
+</script>
+</html>
