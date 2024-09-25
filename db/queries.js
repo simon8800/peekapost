@@ -25,9 +25,17 @@ async function getUserById(id) {
   const { rows } = await pool.query(text, values);
 }
 
+async function getUserByUsername(username) {
+  const text = "SELECT id, username, admin FROM users WHERE username = $1";
+  const values = [username];
+  const { rows } = await pool.query(text, values);
+  return rows[0];
+}
+
 module.exports = {
   getAllMessages,
   getAllUsers,
   getAllMessagesWithUsernames,
   getUserById,
+  getUserByUsername,
 };
