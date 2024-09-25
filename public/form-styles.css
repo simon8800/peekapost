@@ -54,3 +54,17 @@
   border-radius: 4px;
   border-style: none;
 }
+
+.errors-list-container {
+  border: 1px solid rgba(217, 30, 24, 0.5);
+  border-radius: 4px;
+}
+
+.errors-list {
+  list-style-position: inside;
+  margin-left: 25px;
+}
+
+.error-msg {
+  text-indent: -20px;
+}

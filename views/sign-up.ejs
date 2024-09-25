@@ -14,14 +14,19 @@
     <div class="form-container">
       <h2>Sign Up for PeekaPost</h2>
       <div class="form-wrapper">
+        <%- include("./partials/errors") %>
         <form action="/sign-up" method="POST">
           <div class="form-field">
             <label for="username">Username</label>
-            <input type="text" min="3" max="30" placeholder="Choose a username" required>
+            <input autocomplete="username" name="username" id="username" type="text" min="3" max="30" placeholder="Choose a username" required>
           </div>
           <div class="form-field">
             <label for="password">Password</label>
-            <input type="password" min="8" max="64" placeholder="Create a password" required>
+            <input name="password" id="password" type="password" min="8" max="64" placeholder="Create a password" required>
+          </div>
+          <div class="form-field">
+            <label for="adminpassword">Admin Password</label>
+            <input name="adminpassword" id="adminpassword" type="password" placeholder="Enter admin password">
           </div>
           <div>
             <input class="form-btn" type="submit" value="Sign Up">
