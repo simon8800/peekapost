@@ -18,15 +18,15 @@
         <form action="/sign-up" method="POST">
           <div class="form-field">
             <label for="username">Username</label>
-            <input autocomplete="username" name="username" id="username" type="text" min="3" max="30" placeholder="Choose a username" required>
+            <input autocomplete="username" name="username" id="username" type="text" min="3" max="30" placeholder="Choose a username (3+ chars)" required>
           </div>
           <div class="form-field">
             <label for="password">Password</label>
-            <input name="password" id="password" type="password" min="8" max="64" placeholder="Create a password" required>
+            <input name="password" id="password" type="password" min="8" max="64" placeholder="Create a password (6+ chars)" required>
           </div>
           <div class="form-field">
             <label for="adminpassword">Admin Password</label>
-            <input name="adminpassword" id="adminpassword" type="password" placeholder="Enter admin password">
+            <input name="adminpassword" id="adminpassword" type="password" placeholder="Enter admin password (if you know it 🤫)">
           </div>
           <div>
             <input class="form-btn" type="submit" value="Sign Up">

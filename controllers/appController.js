@@ -1,7 +1,8 @@
 // get queries
-const { getAllMessagesWithUsernames } = require("../db/queries");
+const { getAllMessagesWithUsernames, createUser } = require("../db/queries");
 const { body, validationResult } = require("express-validator");
 const { validateUser } = require("../utils/validations");
+const { genPassword } = require("../utils/passwordUtils");
 
 const appGetIndex = async (_req, res) => {
   const messages = await getAllMessagesWithUsernames();
@@ -9,22 +10,39 @@ const appGetIndex = async (_req, res) => {
 };
 
 const appGetSignup = (_req, res) => {
-  // render signup page
   res.render("sign-up");
 };
 
 const appPostSignup = [
   validateUser,
-  (req, res) => {
-    // validate for errors
+  async (req, res) => {
+    // Validate for errors
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).render("sign-up", {
         errors: errors.array(),
       });
     }
+
     const { username, password, adminpassword } = req.body;
-    res.status(200).json({ message: "I am in the works" });
+    const { hash } = await genPassword(password);
+
+    let makeAdmin = false;
+    if (adminpassword === process.env.APP_ADMIN_PASSWORD) {
+      makeAdmin = true;
+    }
+
+    const { success, message } = await createUser({
+      username: username,
+      hash: hash,
+      admin: makeAdmin,
+    });
+
+    if (success) {
+      res.redirect("/sign-in");
+    } else {
+      res.status(400).render("sign-up", { createUserError: message });
+    }
   },
 ];
 
@@ -34,7 +52,8 @@ const appGetSignin = (_req, res) => {
 };
 
 const appPostSignin = (req, res) => {
-  // process sign up and redirect to index
+  const { username, password } = req.body;
+  // Authenticate user by comparing password to hash from database
   res.status(200).json({ message: "I am in the works" });
 };
 

@@ -1,7 +1,7 @@
 const { body } = require("express-validator");
 
-const usernameLengthError = "must be between 3 and 30 characters";
-const passwordLengthError = "must be between 6 and 30 characters";
+const usernameLengthError = "must be between 3 and 30 characters long";
+const passwordLengthError = "must be between 6 and 30 characters long";
 const alphanumError = "must be alphanumeric characters";
 
 const validateUser = [

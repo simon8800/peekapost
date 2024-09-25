@@ -1,3 +1,10 @@
+<% if (locals.createUserError) { %>
+  <div class="errors-list-container">
+    <ul class="errors-list">
+      <li class="error-msg"><%= createUserError %></li>
+    </ul>
+  </div>
+<% } %>
 <% if (locals.errors) { %>
   <div class="errors-list-container">
     <ul class="errors-list">
