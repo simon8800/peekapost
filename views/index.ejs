@@ -13,25 +13,34 @@
       <div class="message-board border-md flex flex-col gap-md">
         <div class="message-board_header flex flex-col justify-center align-center">
           <div class="message-board_header_title flex justify-center align-center gap-sm">
-            <i data-lucide="lock-keyhole-open"></i>
+            <% if (user) { %>
+              <i data-lucide="lock-keyhole-open"></i>
+            <% } else { %>
+              <i data-lucide="lock-keyhole"></i>
+            <% } %>  
             <h2>PeekaPost Message Board</h2>
           </div>
-          <p class="message-board_header_subtitle">You are authorized to send messages.</p>
+          <% if (user) { %>
+            <p class="message-board_header_subtitle">You are authorized to send messages.</p>
+          <% } else { %>
+            <p class="message-board_header_subtitle">You are authorized to only read messages.</p>
+          <% } %>
         </div>
         <div class="messages-container flex flex-col gap-md">
           <% messages.forEach(message => { %>
             <%- include("./partials/userMessage", {message}) %>
           <% }) %>
-          
         </div>
-        <div class="message-board_input">
-          <form action="/message" method="POST">
-            <div class="flex gap-xs">
-              <input class="message-board_input_message border-sm" type="text" placeholder="Enter your message" />
-              <input class="message-board_input_submit border-sm" type="submit" value="Send" />
-            </div>
-          </form>
-        </div>
+        <% if (user) { %>
+          <div class="message-board_input">
+            <form action="/message" method="POST">
+              <div class="flex gap-xs">
+                <input class="message-board_input_message border-sm" type="text" placeholder="Enter your message" />
+                <input class="message-board_input_submit border-sm" type="submit" value="Send" />
+              </div>
+            </form>
+          </div>
+        <% } %>
       </div>
     </main>
     <%- include("./partials/footer") %>

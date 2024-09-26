@@ -1,8 +1,14 @@
 <div class="message flex gap-md">
   <a href="/user/<%= message.sender_id %>" aria-label="Go to <%= message.username %>'s profile"><img src="https://placehold.co/40" alt="avatar" class="avatar border-full"/></a>
   <div class="flex flex-col gap-xs">
-    <p class="message_username"><%= message.username %></p>
+    <% if (user) { %>
+      <p class="message_username"><%= message.username %></p>
+    <% } else { %> 
+      <p class="message_username">user</p>
+    <% } %>
     <p class="message_text"><%= message.content %></p>
-    <p class="message_timestamp"><%= message.created_at %></p>
+    <% if (user) { %>
+      <p class="message_timestamp"><%= message.created_at %></p>
+    <% } %>
   </div>
 </div>

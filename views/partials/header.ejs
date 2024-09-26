@@ -1,8 +1,15 @@
 <header>
   <div class="container flex space-bt align-center">
     <h1><a class="nav-link" href="/">PeekaPost</a></h1>
-    <a class="nav-link" href="/profile">
-      <img class="avatar border-full" src="https://placehold.co/40" alt="user avatar">
-    </a>
+    <div class="flex align-center gap-sm">
+      <% if (user) { %>
+        <a class="nav-link" href="/profile">
+          <img class="avatar border-full" src="https://placehold.co/40" alt="user avatar">
+        </a>
+        <a href="/sign-out" class="nav-link">Sign Out</a>
+      <% } else { %>
+        <a href="/sign-in" class="nav-link">Sign In</a>
+      <% } %>
+    </div>
   </div>
 </header>

@@ -1,10 +1,10 @@
-// get queries
 const { getAllMessagesWithUsernames, createUser } = require("../db/queries");
 const { body, validationResult } = require("express-validator");
 const { validateUser } = require("../utils/validations");
 const { genPassword } = require("../utils/passwordUtils");
+const passport = require("passport");
 
-const appGetIndex = async (_req, res) => {
+const appGetIndex = async (req, res) => {
   const messages = await getAllMessagesWithUsernames();
   res.render("index", { messages });
 };
@@ -25,7 +25,7 @@ const appPostSignup = [
     }
 
     const { username, password, adminpassword } = req.body;
-    const { hash } = await genPassword(password);
+    const hash = await genPassword(password);
 
     let makeAdmin = false;
     if (adminpassword === process.env.APP_ADMIN_PASSWORD) {
@@ -46,20 +46,33 @@ const appPostSignup = [
   },
 ];
 
-const appGetSignin = (_req, res) => {
-  // render signup page
-  res.render("sign-in");
+const appGetSignin = (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.redirect("/");
+  }
+  const messages = req.flash("error");
+  return res.render("sign-in", { messages: messages });
 };
 
-const appPostSignin = (req, res) => {
-  const { username, password } = req.body;
-  // Authenticate user by comparing password to hash from database
-  res.status(200).json({ message: "I am in the works" });
-};
+const appPostSignin = passport.authenticate("local", {
+  failureRedirect: "/sign-in",
+  successRedirect: "/",
+  failureFlash: true,
+  successFlash: true,
+});
 
 const appPostMessage = (req, res) => {
   // process message and redirect to index
   res.status(200).json({ message: "I am in the works" });
+};
+
+const appGetSignout = (req, res, next) => {
+  req.logout((err) => {
+    if (err) {
+      return next(err);
+    }
+    return res.redirect("/sign-in");
+  });
 };
 
 module.exports = {
@@ -69,4 +82,5 @@ module.exports = {
   appPostMessage,
   appGetSignin,
   appPostSignin,
+  appGetSignout,
 };

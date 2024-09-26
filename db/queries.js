@@ -20,13 +20,14 @@ async function getAllMessagesWithUsernames() {
 }
 
 async function getUserById(id) {
-  const text = "SELECT id, username, admin FROM users WHERE id = $1";
+  const text = "SELECT * FROM users WHERE id = $1";
   const values = [id];
   const { rows } = await pool.query(text, values);
+  return rows[0];
 }
 
 async function getUserByUsername(username) {
-  const text = "SELECT id, username, admin FROM users WHERE username = $1";
+  const text = "SELECT * FROM users WHERE username = $1";
   const values = [username];
   const { rows } = await pool.query(text, values);
   return rows[0];
