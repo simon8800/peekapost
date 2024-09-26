@@ -58,13 +58,15 @@ async function createUser({ username, hash, admin }) {
 }
 
 async function createMessage({ messageContent, userId }) {
-  const SQL = `INSERT INTO messages (content, sender_id) VALUES ($1, $2)`;
+  const SQL = `INSERT INTO messages (content, sender_id) VALUES ($1, $2) RETURNING *`;
   const values = [messageContent, userId];
   try {
-    await pool.query(SQL, values);
+    const { rows } = await pool.query(SQL, values);
+    const newMessage = rows[0];
     return {
       success: true,
       message: "Message created successfully.",
+      newMessage: newMessage,
     };
   } catch (error) {
     console.log(error);

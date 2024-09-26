@@ -20,21 +20,25 @@
             <% } %>  
             <h2>PeekaPost Message Board</h2>
           </div>
-          <% if (user) { %>
+          <% if (user && user.admin) { %>
+            <p class="message-board_header_subtitle">You are authorized to send and delete messages.</p>
+          <% } else if (user) { %>
             <p class="message-board_header_subtitle">You are authorized to send messages.</p>
           <% } else { %>
-            <p class="message-board_header_subtitle">You are authorized to only read messages.</p>
+            <p class="message-board_header_subtitle">You may only read messages.</p>
           <% } %>
         </div>
         <div class="messages-container flex flex-col gap-md">
-          <% messages.forEach(message => { %>
-            <%- include("./partials/userMessage", {message}) %>
-          <% }) %>
+          <% if (messages) { %>
+            <% messages.forEach(message => { %>
+              <%- include("./partials/userMessage", {message}) %>
+            <% }) %>
+          <% } %> 
         </div>
         <% if (user) { %>
           <div class="message-board_input">
             <%- include("./partials/errors") %>
-            <form action="/message" method="POST">
+            <form id="create-message-form" action="/message" method="POST">
               <div class="flex gap-xs">
                 <input name="messageContent" id="messageContent" minlength="3" maxlength="200" class="message-board_input_message border-sm" type="text" placeholder="Enter your message" required />
                 <input class="message-board_input_submit border-sm" type="submit" value="Send" />
@@ -53,9 +57,27 @@
     // Scroll messagesContainer to the bottom
     const messagesContainer = document.querySelector(".messages-container");
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
-
-    const messageInput = document.querySelector("#message")
     
+    const messageForm = document.getElementById("create-message-form");
+    messageForm.onsubmit = (event) => {
+      event.preventDefault();
+      const formData = new FormData(messageForm);
+      fetch('/message', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({messageContent: formData.get('messageContent')})
+      })
+        .then(response => response.json())
+        .then(data => {
+          location.reload();
+        })
+        .catch(error => {
+          console.log(error);
+        })
+    }
+
     function deleteMessage(messageId) {
       fetch(`/message/${messageId}`, {
         method: 'DELETE',

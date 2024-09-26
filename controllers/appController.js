@@ -11,7 +11,7 @@ const passport = require("passport");
 
 const appGetIndex = async (req, res) => {
   const messages = await getAllMessagesWithUsernames();
-  res.render("index", { messages });
+  return res.render("index", { messages: messages });
 };
 
 const appGetSignup = (_req, res) => {
@@ -69,25 +69,29 @@ const appPostSignin = passport.authenticate("local", {
   successFlash: true,
 });
 
+// somethign in inherently wrong with this code
 const appPostMessage = [
-  validateMessage,
+  // validateMessage,
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+      const messages = await getAllMessagesWithUsernames();
       return res.status(400).render("index", {
+        messages: messages,
         errors: errors.array(),
       });
     }
 
-    const { success, message } = await createMessage({
+    const results = await createMessage({
       messageContent: req.body.messageContent,
       userId: req.user.id,
     });
 
-    if (success) {
-      return res.redirect("/");
+    if (results.success) {
+      results.newMessage.username = req.user.username;
+      return res.status(200).json({ data: results.newMessage });
     } else {
-      return res.status(400).render("index", { createMessageError: message });
+      return res.status(400).json(results);
     }
   },
 ];

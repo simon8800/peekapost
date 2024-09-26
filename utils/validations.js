@@ -3,7 +3,7 @@ const { body } = require("express-validator");
 const usernameLengthError = "must be between 3 and 30 characters long";
 const passwordLengthError = "must be between 6 and 30 characters long";
 const messageLengthError = "must be between 3 and 200 characters long";
-const alphanumError = "must be alphanumeric characters";
+const alphanumError = "must be alphanumeric characters with no whitespaces";
 
 const validateUser = [
   body("username")
@@ -28,7 +28,7 @@ const validateUser = [
 const validateMessage = [
   body("messageContent")
     .trim()
-    .isAlphanumeric()
+    .matches(/^[a-zA-Z0-9\s]+$/)
     .withMessage(`Message ${alphanumError}`)
     .isLength({ min: 3, max: 200 })
     .withMessage(`Message ${messageLengthError}`),
