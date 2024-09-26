@@ -5,11 +5,6 @@ async function getAllMessages() {
   return rows;
 }
 
-async function getAllUsers() {
-  const { rows } = await pool.query(`SELECT id, username, admin FROM users`);
-  return rows;
-}
-
 async function getAllMessagesWithUsernames() {
   const { rows } = await pool.query(
     `SELECT messages.id, content, sender_id, created_at, users.username FROM messages
@@ -51,7 +46,7 @@ async function createUser({ username, hash, admin }) {
     await pool.query(text, values);
     return {
       success: true,
-      message: "User created successfully",
+      message: "User created successfully.",
     };
   } catch (error) {
     console.log(error);
@@ -62,11 +57,46 @@ async function createUser({ username, hash, admin }) {
   }
 }
 
+async function createMessage({ messageContent, userId }) {
+  const SQL = `INSERT INTO messages (content, sender_id) VALUES ($1, $2)`;
+  const values = [messageContent, userId];
+  try {
+    await pool.query(SQL, values);
+    return {
+      success: true,
+      message: "Message created successfully.",
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      success: false,
+      message:
+        "An error occurred while posting the message. Please try again later.",
+    };
+  }
+}
+
+async function deleteMessageById(id) {
+  const text = `DELETE FROM messages WHERE id = $1`;
+  const values = [id];
+  try {
+    await pool.query(text, values);
+    return { success: true, message: "Message successfully deleted" };
+  } catch (err) {
+    return {
+      success: false,
+      message:
+        "An error occurred while trying to delete message. Please try again later.",
+    };
+  }
+}
+
 module.exports = {
   getAllMessages,
-  getAllUsers,
   getAllMessagesWithUsernames,
   getUserById,
   getUserByUsername,
   createUser,
+  createMessage,
+  deleteMessageById,
 };

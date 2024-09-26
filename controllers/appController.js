@@ -1,6 +1,11 @@
-const { getAllMessagesWithUsernames, createUser } = require("../db/queries");
-const { body, validationResult } = require("express-validator");
-const { validateUser } = require("../utils/validations");
+const {
+  getAllMessagesWithUsernames,
+  createUser,
+  createMessage,
+  deleteMessageById,
+} = require("../db/queries");
+const { validationResult } = require("express-validator");
+const { validateUser, validateMessage } = require("../utils/validations");
 const { genPassword } = require("../utils/passwordUtils");
 const passport = require("passport");
 
@@ -27,17 +32,20 @@ const appPostSignup = [
     const { username, password, adminpassword } = req.body;
     const hash = await genPassword(password);
 
+    // Check if user entered valid admin password
     let makeAdmin = false;
     if (adminpassword === process.env.APP_ADMIN_PASSWORD) {
       makeAdmin = true;
     }
 
+    // Create user
     const { success, message } = await createUser({
       username: username,
       hash: hash,
       admin: makeAdmin,
     });
 
+    // Redirect to sign-in if successful
     if (success) {
       res.redirect("/sign-in");
     } else {
@@ -61,9 +69,37 @@ const appPostSignin = passport.authenticate("local", {
   successFlash: true,
 });
 
-const appPostMessage = (req, res) => {
-  // process message and redirect to index
-  res.status(200).json({ message: "I am in the works" });
+const appPostMessage = [
+  validateMessage,
+  async (req, res) => {
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).render("index", {
+        errors: errors.array(),
+      });
+    }
+
+    const { success, message } = await createMessage({
+      messageContent: req.body.messageContent,
+      userId: req.user.id,
+    });
+
+    if (success) {
+      return res.redirect("/");
+    } else {
+      return res.status(400).render("index", { createMessageError: message });
+    }
+  },
+];
+
+const appDeleteMessage = async (req, res) => {
+  const messageId = req.params.id;
+  const { success, message } = await deleteMessageById(messageId);
+  if (success) {
+    return res.status(200).json({ success, message });
+  } else {
+    res.status(500).json({ succes, message });
+  }
 };
 
 const appGetSignout = (req, res, next) => {
@@ -80,6 +116,7 @@ module.exports = {
   appGetSignup,
   appPostSignup,
   appPostMessage,
+  appDeleteMessage,
   appGetSignin,
   appPostSignin,
   appGetSignout,

@@ -33,9 +33,10 @@
         </div>
         <% if (user) { %>
           <div class="message-board_input">
+            <%- include("./partials/errors") %>
             <form action="/message" method="POST">
               <div class="flex gap-xs">
-                <input class="message-board_input_message border-sm" type="text" placeholder="Enter your message" />
+                <input name="messageContent" id="messageContent" minlength="3" maxlength="200" class="message-board_input_message border-sm" type="text" placeholder="Enter your message" required />
                 <input class="message-board_input_submit border-sm" type="submit" value="Send" />
               </div>
             </form>
@@ -53,5 +54,19 @@
     const messagesContainer = document.querySelector(".messages-container");
     messagesContainer.scrollTop = messagesContainer.scrollHeight;
 
+    const messageInput = document.querySelector("#message")
+    
+    function deleteMessage(messageId) {
+      fetch(`/message/${messageId}`, {
+        method: 'DELETE',
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          document.getElementById(`message-${messageId}`).remove();
+        }
+      })
+      .catch(error => console.error('Error:', error));
+    }
   </script>
 </html>
